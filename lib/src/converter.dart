@@ -74,14 +74,15 @@ String _escape(String input) {
             .replaceAllMapped(RegExp(r'([*+-])'), (match) => '\\${match[1]}');
       })
       .replaceAllMapped(RegExp(r'^(\W* {0,3})> '), (match) => '${match[1]}\\> ')
-      .replaceAllMapped(RegExp(r'\*+(?![*\s\W]).+?\*+'),
+      .replaceAllMapped(RegExp(_notLink + r'\*+(?![*\s\W]).+?\*+'),
           (match) => match[0]!.replaceAll(RegExp(r'\*'), '\\*'))
-      .replaceAllMapped(RegExp(r'_+(?![_\s\W]).+?_+'),
+      .replaceAllMapped(RegExp(_notLink + r'_+(?![_\s\W]).+?_+'),
           (match) => match[0]!.replaceAll(RegExp(r'_'), '\\_'))
-      .replaceAllMapped(RegExp(r'`+(?![`\s\W]).+?`+'),
+      .replaceAllMapped(RegExp(_notLink + r'`+(?![`\s\W]).+?`+'),
           (match) => match[0]!.replaceAll(RegExp(r'`'), '\\`'))
-      .replaceAllMapped(RegExp(r'[\[\]]'), (match) => '\\${match[0]}');
+      .replaceAllMapped(RegExp(_notLink + r'[\[\]]'), (match) => '\\${match[0]}');
 }
+const _notLink = r'(?<!(https?://|mailto:|tel:)\S+)';
 
 Map<String, String> _getFlankingWhitespace(Node node) {
   var result = <String, String>{};

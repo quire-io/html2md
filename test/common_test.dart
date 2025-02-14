@@ -179,5 +179,18 @@ print('你好, 世界');
       body?.innerHtml = 'Hello World';
       expect(html2md.convert(body!), '''Hello World''');
     });
+
+    test('MD pattern in URL', () {
+      final pattern = '12345psi5vvul-eF_0-oMYA_pHvAPM_M-',
+        ptnEscaped = r'12345psi5vvul-eF\_0-oMYA\_pHvAPM_M-',
+        path = 'https://drive.google.com/drive/folders/',
+        url = '$path$pattern';
+      expect(html2md.convert(url), url);
+      expect(html2md.convert(pattern), ptnEscaped); //still escape
+      expect(html2md.convert('$path $pattern'), '$path $ptnEscaped');
+
+      final email = 'mailto:joe_moon@foo_ab.com';
+      expect(html2md.convert(email), email);
+    });
   });
 }
