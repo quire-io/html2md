@@ -58,7 +58,8 @@ String convert(
   return _postProcess(output);
 }
 
-String _escape(String input) {
+/// Escapes markdown's special characters to make it plain text.
+String escape(String input) {
   return input
       .replaceAllMapped(RegExp(r'\\(\S)'),
           (match) => '\\\\${match[1]}') // Escape backslash escapes!
@@ -151,7 +152,8 @@ String _process(Node inNode) {
     if (node.nodeType == 3) {
       // Text
       var textContent = node.textContent;
-      replacement = node.isCode ? textContent : _escape(textContent);
+      /// Escapes markdown's special characters to make it plain text.
+      replacement = node.isCode ? textContent : escape(textContent);
     } else if (node.nodeType == 1) {
       // Element
       replacement = _replacementForNode(node);
