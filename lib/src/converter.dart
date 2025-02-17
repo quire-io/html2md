@@ -75,11 +75,11 @@ String escape(String input) {
             .replaceAllMapped(RegExp(r'([*+-])'), (match) => '\\${match[1]}');
       })
       .replaceAllMapped(RegExp(r'^(\W* {0,3})> '), (match) => '${match[1]}\\> ')
-      .replaceAllMapped(RegExp(_notLink + r'\*+(?![*\s\W]).+?\*+'),
+      .replaceAllMapped(RegExp(_notLink + r'\*+(?!\s)[^*]+(?<!\s)\*+'), //space NOT allowed after the 1st *
           (match) => match[0]!.replaceAll(RegExp(r'\*'), '\\*'))
-      .replaceAllMapped(RegExp(_notLink + r'_+(?![_\s\W]).+?_+'),
+      .replaceAllMapped(RegExp(_notLink + r'_+(?!\s)[^_]+(?<!\s)_+'), //space NOT allowed after the 1st _
           (match) => match[0]!.replaceAll(RegExp(r'_'), '\\_'))
-      .replaceAllMapped(RegExp(_notLink + r'`+(?![`\s\W]).+?`+'),
+      .replaceAllMapped(RegExp(_notLink + r'`+[^`]+`+'), //space allowed after the 1st `
           (match) => match[0]!.replaceAll(RegExp(r'`'), '\\`'))
       .replaceAllMapped(RegExp(_notLink + r'[\[\]]'), (match) => '\\${match[0]}');
 }
