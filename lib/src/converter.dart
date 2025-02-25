@@ -81,6 +81,8 @@ String escape(String input) {
           (match) => match[0]!.replaceAll(RegExp(r'_'), '\\_'))
       .replaceAllMapped(RegExp(_notLink + r'`+[^`]+`+'), //space allowed after the 1st `
           (match) => match[0]!.replaceAll(RegExp(r'`'), '\\`'))
+      .replaceAllMapped(RegExp(_notLink + r'~+[^~]+~+'), //space allowed after the 1st ~
+          (match) => match[0]!.replaceAll(RegExp(r'~'), '\\~'))
       .replaceAllMapped(RegExp(_notLink + r'[\[\]]'), (match) => '\\${match[0]}');
 }
 const _notLink = r'(?<!(https?://|mailto:|tel:)\S+)';
