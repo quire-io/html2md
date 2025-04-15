@@ -142,7 +142,7 @@ String _postProcess(String input) {
   if (input.isNotEmpty) {
     return input
         .replaceAll(RegExp(r'^[\t\r\n]+'), '')
-        .replaceAll(RegExp(r'[\t\r\n\s]+$'), '');
+        .replaceAll(RegExp(r'[\t\r\n]+$'), '');
   }
   return '';
 }

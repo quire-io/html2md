@@ -168,8 +168,9 @@ dom.Node _collapseWhitespace(dom.Node domNode, List<String> removeTags) {
         continue;
       }
 
-      if (isBlock(elNode) || elNode.localName!.toLowerCase() == 'br') {
-        if (prevText != null) {
+      final nodeName = elNode.localName?.toLowerCase();
+      if (isBlock(elNode) || nodeName == 'br') {
+        if (prevText != null && nodeName != 'body') {
           prevText.data = prevText.data.replaceAll(RegExp(r' $'), '');
         }
         prevText = null;
