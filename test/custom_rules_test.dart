@@ -178,5 +178,28 @@ void main() {
 ![topic](https://cdn.dart-china.org/uploads/default/optimized/1X/6a3defd01a5312c602069c235abf324b7d26f256_2_231x500.jpeg)
 ![menu](https://cdn.dart-china.org/uploads/default/optimized/1X/11ed20db88b0f2d12e82da8a4d13f0b2fedef34b_2_231x500.png)''');
     });
+
+    test('rules passed on every convert are registered once', () {
+      var checks = 0;
+      final rule = Rule('counting', filterFn: (node) {
+        ++checks;
+        return false;
+      });
+      String convert() => html2md.convert('<p>Hi<script>x</script></p>',
+          rules: [rule], ignore: ['script']);
+
+      expect(convert(), 'Hi');
+      final checksPerConvert = checks;
+      for (var i = 0; i < 10; ++i) {
+        expect(convert(), 'Hi');
+      }
+      expect(checks, checksPerConvert * 11);
+    });
+
+    test('ignore lists of different converts all apply', () {
+      expect(html2md.convert('<p>A<kbd>1</kbd></p>', ignore: ['kbd']), 'A');
+      expect(html2md.convert('<p>A<var>2</var></p>', ignore: ['var']), 'A');
+      expect(html2md.convert('<p>A<kbd>1</kbd><var>2</var></p>'), 'A');
+    });
   });
 }

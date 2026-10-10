@@ -57,7 +57,9 @@ class Rule {
   final AppendFn? append;
 
   final FilterFn? _realFilterFn;
-  static final List<Rule> _customRules = [];
+  // Sets, so calling convert() repeatedly with the same rules/ignore won't grow them
+  static final Set<Rule> _customRules = {};
+  static final Set<String> _ignoredNames = {};
 
   Rule(this.name, {this.filters, this.filterFn, this.replacement, this.append})
       : _realFilterFn = _buildFilterFn(filters, filterFn);
@@ -81,7 +83,10 @@ class Rule {
 
   static void addIgnore(List<String> names) {
     if (names.isNotEmpty) {
-      _commonMarkRules.insert(0, _BaseRules.buildIgnoreRule(names));
+      if (_ignoredNames.isEmpty) {
+        _commonMarkRules.insert(0, _BaseRules.ignoreRule);
+      }
+      _ignoredNames.addAll(names);
     }
   }
 
@@ -119,11 +124,12 @@ abstract class _BaseRules {
       : node.isBlock ? '\n\n' + content + '\n\n' : content;
   });
 
-  static Rule buildIgnoreRule(List<String> names) {
-    return Rule('ignore', filters: names, replacement: (content, node) {
-      return '';
-    });
-  }
+  static final Rule ignoreRule = Rule('ignore',
+      filterFn: (node) =>
+          Rule._ignoredNames.contains(node.nodeName.toLowerCase()),
+      replacement: (content, node) {
+    return '';
+  });
 }
 
 abstract class _CommonRules {
